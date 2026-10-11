@@ -34,7 +34,7 @@ def generate_document(data: DocumentRequest):
     prompt = f"""
 You are a legal document drafting assistant.
 
-Create a clear and well-organized legal document draft
+Create a clear, well-organized legal document draft
 for educational purposes using the details below.
 
 Document type: {data.document_type}
@@ -54,8 +54,8 @@ Include:
 
 Use clear, professional language.
 Do not invent missing personal or legal details.
-Add a note that a qualified lawyer should review
-the document before it is used officially.
+Include a note that a qualified lawyer should review
+the document before official use.
 """
 
     try:
@@ -76,21 +76,17 @@ the document before it is used officially.
 
     except HTTPException:
         raise
-except Exception as error:
+
+    except Exception as error:
         error_message = str(error)
 
         if "503" in error_message or "UNAVAILABLE" in error_message:
             raise HTTPException(
                 status_code=503,
-                detail="Gemini AI is temporarily busy. Please try again later."
+                detail="Gemini AI is temporarily busy. Please try again."
             )
 
         raise HTTPException(
             status_code=500,
             detail=f"Document generation failed: {error_message}"
-        )
-    except Exception as error:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Document generation failed: {str(error)}"
         )
